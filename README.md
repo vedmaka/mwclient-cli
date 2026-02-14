@@ -12,7 +12,6 @@ Exposes `mwclient` methods from 3 targets:
 From project dir:
 
 ```bash
-cd /app/mwcli
 pip install -r requirements.txt
 pip install -e .
 ```
