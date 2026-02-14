@@ -20,7 +20,7 @@ pip install -e .
 ## Command shape
 
 ```bash
-python -m mwcli [connection flags] <site|page|image> <target args> <method> [--arg ...] [--kw ...]
+python -m mwcli [connection flags] <site|page|image> <target args> <method> [--arg ...] [--kw ...] [--markdown]
 ```
 
 Connection flags:
@@ -35,6 +35,7 @@ Method args:
 - `--kw KEY=VALUE` keyword arg, value JSON-parsed when possible
 - `--max-items N` cap iterator/list output
 - `--stream` print list/tuple one JSON per line
+- `--markdown` convert content-read output to Markdown (see below)
 
 Tip: quote strings with spaces/pipes.
 
@@ -98,6 +99,19 @@ Read one section:
 ```bash
 python -m mwcli --host host.docker.internal --scheme http --path /w/ \
   page "Main Page" text --kw section=1
+```
+
+Read as Markdown (`page text` uses `site parse` + `html2text`):
+
+```bash
+python -m mwcli --host host.docker.internal --scheme http --path /w/ \
+  page "Main Page" text --markdown
+```
+
+The markdown output starts with:
+
+```md
+# Main Page
 ```
 
 ### Search
@@ -198,6 +212,20 @@ Raw API (no extra wrapper logic):
 python -m mwcli --host host.docker.internal --scheme http --path /w/ \
   site raw_api --arg query --arg GET --kw list=search --kw srsearch=space
 ```
+
+Parse wikitext/HTML directly as Markdown:
+
+```bash
+python -m mwcli --host host.docker.internal --scheme http --path /w/ \
+  site parse --kw text=$'== Header ==\n\nBody' --markdown
+```
+
+`--markdown` currently applies to:
+
+- `page text`
+- `site parse`
+
+Implementation uses `html2text`: https://pypi.org/project/html2text/
 
 ### Page and image list iterators
 

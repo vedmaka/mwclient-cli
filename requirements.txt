@@ -1,2 +1,3 @@
 mwclient
 pytest
+html2text

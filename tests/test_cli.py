@@ -7,11 +7,13 @@ from mwcli import cli
 
 
 class DummyPage:
-    def __init__(self, title: str):
+    def __init__(self, site, title: str):
+        self.site = site
         self.title = title
+        self.name = title
 
     def text(self) -> str:
-        return f"text:{self.title}"
+        return "== Heading ==\n\nBody text"
 
     def numbers(self):
         for number in range(3):
@@ -19,17 +21,25 @@ class DummyPage:
 
 
 class DummyPages:
+    def __init__(self, site):
+        self.site = site
+
     def __getitem__(self, title: str) -> DummyPage:
-        return DummyPage(title)
+        return DummyPage(self.site, title)
 
 
 class DummySite:
     def __init__(self):
-        self.pages = DummyPages()
-        self.images = DummyPages()
+        self.pages = DummyPages(self)
+        self.images = DummyPages(self)
 
     def ping(self, value: int = 1) -> dict[str, int]:
         return {"value": value}
+
+    def parse(self, **kwargs):
+        if kwargs.get("text") == "== Heading ==\n\nBody text":
+            return {"text": {"*": "<h2>Heading</h2><p>Body text</p>"}}
+        return {"text": {"*": "<h1>Parsed</h1><p>Body html</p>"}}
 
 
 def test_parse_cli_value_json_and_string():
@@ -87,6 +97,7 @@ def test_root_help_includes_core_flags(capsys):
     assert "--host" in out
     assert "--scheme" in out
     assert "--path" in out
+    assert "--markdown" in out
     assert "methods site" in out
 
 
@@ -98,3 +109,37 @@ def test_site_help_includes_method_arg_flags(capsys):
     assert "--arg VALUE" in out
     assert "--kw KEY=VALUE" in out
     assert "--max-items N" in out
+    assert "--markdown" in out
+
+
+def test_page_text_markdown_conversion(capsys):
+    with patch.object(cli, "build_site", return_value=DummySite()), patch.object(
+        cli, "list_public_methods", return_value={"text": DummyPage.text}
+    ):
+        rc = cli.run(["--host", "example.org", "page", "Main_Page", "text", "--markdown"])
+    assert rc == 0
+    out = capsys.readouterr().out
+    assert out.startswith("# Main Page\n\n")
+    assert "## Heading" in out
+    assert "Body text" in out
+
+
+def test_site_parse_markdown_conversion(capsys):
+    with patch.object(cli, "build_site", return_value=DummySite()), patch.object(
+        cli, "list_public_methods", return_value={"parse": DummySite.parse}
+    ):
+        rc = cli.run(
+            [
+                "--host",
+                "example.org",
+                "site",
+                "parse",
+                "--kw",
+                "text=Example",
+                "--markdown",
+            ]
+        )
+    assert rc == 0
+    out = capsys.readouterr().out
+    assert "# Parsed" in out
+    assert "Body html" in out

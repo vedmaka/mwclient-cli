@@ -12,6 +12,8 @@ import sys
 from collections.abc import Iterator, Mapping
 from typing import Any
 
+import html2text
+
 _ENTITY_LOCATIONS = {
     "site": ("mwclient.client", "Site"),
     "page": ("mwclient.page", "Page"),
@@ -107,12 +109,65 @@ def print_json(value: Any, indent: int | None) -> None:
     sys.stdout.write("\n")
 
 
+def print_text(value: str) -> None:
+    sys.stdout.write(value.rstrip("\n"))
+    sys.stdout.write("\n")
+
+
 def print_method_list(entity: str) -> int:
     methods = list_public_methods(entity)
     for name in sorted(methods):
         signature = inspect.signature(methods[name])
         print(f"{entity}.{name}{signature}")
     return 0
+
+
+def html_to_markdown(value: str) -> str:
+    converter = html2text.HTML2Text()
+    converter.body_width = 0
+    converter.ignore_images = False
+    converter.ignore_links = False
+    return converter.handle(value).strip()
+
+
+def normalize_page_title(value: str) -> str:
+    return value.replace("_", " ").strip()
+
+
+def extract_parse_html(parse_result: Any) -> str | None:
+    if not isinstance(parse_result, Mapping):
+        return None
+    text_data = parse_result.get("text")
+    if not isinstance(text_data, Mapping):
+        return None
+    text_html = text_data.get("*")
+    return text_html if isinstance(text_html, str) else None
+
+
+def maybe_convert_markdown(args: argparse.Namespace, target: Any, result: Any) -> Any:
+    if not getattr(args, "markdown", False):
+        return result
+
+    if args.command == "page" and args.method == "text" and isinstance(result, str):
+        parse_data = target.site.parse(text=result, title=getattr(target, "name", None))
+        parse_html = extract_parse_html(parse_data)
+        title = normalize_page_title(
+            str(getattr(target, "name", getattr(target, "title", args.title)))
+        )
+        heading = f"# {title}".strip()
+        if parse_html:
+            body = html_to_markdown(parse_html).strip()
+            return f"{heading}\n\n{body}" if body else heading
+        body = result.strip()
+        return f"{heading}\n\n{body}" if body else heading
+
+    if args.command == "site" and args.method == "parse":
+        parse_html = extract_parse_html(result)
+        if parse_html:
+            return html_to_markdown(parse_html)
+        return result
+
+    return result
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -194,6 +249,14 @@ def build_parser() -> argparse.ArgumentParser:
         metavar="N",
         help="Pretty-print JSON output with N-space indentation",
     )
+    parser.add_argument(
+        "--markdown",
+        action="store_true",
+        help=(
+            "Convert content-read methods to Markdown "
+            "(currently: page text, site parse)"
+        ),
+    )
 
     subparsers = parser.add_subparsers(
         dest="command",
@@ -265,6 +328,12 @@ def build_parser() -> argparse.ArgumentParser:
             metavar="N",
             help="Limit number of emitted items for iterator/list results",
         )
+        entity_parser.add_argument(
+            "--markdown",
+            action="store_true",
+            default=argparse.SUPPRESS,
+            help="Convert content-read methods to Markdown",
+        )
 
     return parser
 
@@ -299,6 +368,7 @@ def run(argv: list[str] | None = None) -> int:
     method = getattr(target, args.method)
 
     result = method(*positionals, **kwargs)
+    result = maybe_convert_markdown(args, target, result)
     if isinstance(result, Iterator):
         max_items = args.max_items
         count = 0
@@ -316,7 +386,10 @@ def run(argv: list[str] | None = None) -> int:
             print_json(item, args.indent)
         return 0
 
-    print_json(result, args.indent)
+    if args.markdown and isinstance(result, str):
+        print_text(result)
+    else:
+        print_json(result, args.indent)
     return 0
 
 
