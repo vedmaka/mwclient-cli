@@ -2,6 +2,8 @@
 
 CLI wrapper around `mwclient` library. Built for ✨Agentic workflows 🤖
 
+<img width="1339" height="1242" alt="mwclient-cli agentic usage with Wikipedia" src="https://github.com/user-attachments/assets/c9a5c91f-0744-4f7f-9421-568dd6bf21a1" />
+
 # Quickstart (for Agents 🤖)
 
 Read the [SKILL.md](SKILL.md)
