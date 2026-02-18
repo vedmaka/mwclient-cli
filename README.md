@@ -2,12 +2,11 @@
 
 CLI wrapper around `mwclient` library. Built for Agentic workflows 🤖
 
-Exposes `mwclient` methods from 3 targets:
-- `site` -> `mwclient.Site`
-- `page` -> `mwclient.page.Page`
-- `image` -> `mwclient.image.Image`
+# Quickstart (for Agents 🤖)
 
-# Quickstart
+Read the [SKILL.md](SKILL.md)
+
+# Quickstart (for Humans 🧑)
 
 ```bash
 uvx mwclient-cli --help
@@ -20,6 +19,11 @@ pip install mwclient-cli
 ```
 
 ## Command shape
+
+Exposes `mwclient` methods from 3 targets:
+- `site` -> `mwclient.Site`
+- `page` -> `mwclient.page.Page`
+- `image` -> `mwclient.image.Image`
 
 ```bash
 uvx mwclient-cli [connection flags] <site|page|image> <target args> <method> [--arg ...] [--kw ...] [--markdown]
