@@ -172,7 +172,7 @@ def maybe_convert_markdown(args: argparse.Namespace, target: Any, result: Any) -
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="mwcli",
+        prog="mwclient-cli",
         formatter_class=HelpFormatter,
         description=(
             "Command-line wrapper around mwclient\n\n"
@@ -183,10 +183,10 @@ def build_parser() -> argparse.ArgumentParser:
         ),
         epilog=(
             "Examples:\n"
-            "  mwcli methods site\n"
-            "  mwcli --host host.docker.internal --scheme http --path /w/ "
+            "  mwclient-cli methods site\n"
+            "  mwclient-cli --host host.docker.internal --scheme http --path /w/ "
             "page \"Main Page\" text\n"
-            "  mwcli --host host.docker.internal --scheme http --path /w/ "
+            "  mwclient-cli --host host.docker.internal --scheme http --path /w/ "
             "site search --arg space --kw what=text --max-items 5"
         ),
     )
@@ -272,8 +272,8 @@ def build_parser() -> argparse.ArgumentParser:
         description="List callable public methods and signatures.",
         epilog=(
             "Examples:\n"
-            "  mwcli methods all\n"
-            "  mwcli methods page"
+            "  mwclient-cli methods all\n"
+            "  mwclient-cli methods page"
         ),
     )
     methods_parser.add_argument(
@@ -293,10 +293,10 @@ def build_parser() -> argparse.ArgumentParser:
             ),
             epilog=(
                 "Examples:\n"
-                f"  mwcli --host HOST {entity} "
+                f"  mwclient-cli --host HOST {entity} "
                 + ("\"Main Page\" " if entity == "page" else "\"Example.png\" " if entity == "image" else "")
                 + "METHOD --arg VALUE --kw key=value\n"
-                f"  mwcli methods {entity}"
+                f"  mwclient-cli methods {entity}"
             ),
         )
         if entity in {"page", "image"}:
