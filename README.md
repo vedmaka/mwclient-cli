@@ -1,6 +1,6 @@
 # mwcli
 
-CLI wrapper around `mwclient`.
+CLI wrapper around `mwclient`. Built for Agents.
 
 Exposes `mwclient` methods from 3 targets:
 - `site` -> `mwclient.Site`
