@@ -185,7 +185,7 @@ def build_parser() -> argparse.ArgumentParser:
             "Examples:\n"
             "  mwclient-cli methods site\n"
             "  mwclient-cli --host host.docker.internal --scheme http --path /w/ "
-            "page \"Main Page\" text\n"
+            "page \"Main_Page\" text\n"
             "  mwclient-cli --host host.docker.internal --scheme http --path /w/ "
             "site search --arg space --kw what=text --max-items 5"
         ),

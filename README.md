@@ -1,15 +1,19 @@
 # mwcli
 
-CLI wrapper around `mwclient`. Built for Agents.
+CLI wrapper around `mwclient` library. Built for Agentic workflows 🤖
 
 Exposes `mwclient` methods from 3 targets:
 - `site` -> `mwclient.Site`
 - `page` -> `mwclient.page.Page`
 - `image` -> `mwclient.image.Image`
 
-## Install
+# Quickstart
 
-From project dir:
+```bash
+uvx mwclient-cli --help
+```
+
+## Install
 
 ```bash
 pip install mwclient-cli
@@ -18,7 +22,7 @@ pip install mwclient-cli
 ## Command shape
 
 ```bash
-python -m mwcli [connection flags] <site|page|image> <target args> <method> [--arg ...] [--kw ...] [--markdown]
+uvx mwclient-cli [connection flags] <site|page|image> <target args> <method> [--arg ...] [--kw ...] [--markdown]
 ```
 
 Connection flags:
@@ -40,20 +44,20 @@ Tip: quote strings with spaces/pipes.
 ## Discover available methods
 
 ```bash
-python -m mwcli methods all
-python -m mwcli methods site
-python -m mwcli methods page
-python -m mwcli methods image
+uvx mwclient-cli methods all
+uvx mwclient-cli methods site
+uvx mwclient-cli methods page
+uvx mwclient-cli methods image
 ```
 
 ## All commands
 
 Top-level commands:
 
-- `python -m mwcli methods {all|site|page|image}`
-- `python -m mwcli site <method> [--arg ...] [--kw ...]`
-- `python -m mwcli page "<title>" <method> [--arg ...] [--kw ...]`
-- `python -m mwcli image "<title>" <method> [--arg ...] [--kw ...]`
+- `uvx mwclient-cli methods {all|site|page|image}`
+- `uvx mwclient-cli site <method> [--arg ...] [--kw ...]`
+- `uvx mwclient-cli page "<title>" <method> [--arg ...] [--kw ...]`
+- `uvx mwclient-cli image "<title>" <method> [--arg ...] [--kw ...]`
 
 `site` methods (mwclient 0.11.0):
 
@@ -80,7 +84,7 @@ Top-level commands:
 To confirm runtime command surface on your installed version:
 
 ```bash
-python -m mwcli methods all
+uvx mwclient-cli methods all
 ```
 
 ## Main usage examples
@@ -88,21 +92,21 @@ python -m mwcli methods all
 ### Get page content
 
 ```bash
-python -m mwcli --host host.docker.internal --scheme http --path /w/ \
+uvx mwclient-cli --host host.docker.internal --scheme http --path /w/ \
   page "Main Page" text
 ```
 
 Read one section:
 
 ```bash
-python -m mwcli --host host.docker.internal --scheme http --path /w/ \
+uvx mwclient-cli --host host.docker.internal --scheme http --path /w/ \
   page "Main Page" text --kw section=1
 ```
 
 Read as Markdown (`page text` uses `site parse` + `html2text`):
 
 ```bash
-python -m mwcli --host host.docker.internal --scheme http --path /w/ \
+uvx mwclient-cli --host host.docker.internal --scheme http --path /w/ \
   page "Main Page" text --markdown
 ```
 
@@ -117,21 +121,21 @@ The markdown output starts with:
 Full text search:
 
 ```bash
-python -m mwcli --host host.docker.internal --scheme http --path /w/ \
+uvx mwclient-cli --host host.docker.internal --scheme http --path /w/ \
   site search --arg "space" --kw what=text --max-items 10
 ```
 
 Title-only search:
 
 ```bash
-python -m mwcli --host host.docker.internal --scheme http --path /w/ \
+uvx mwclient-cli --host host.docker.internal --scheme http --path /w/ \
   site search --arg "Main" --kw what=title --max-items 10
 ```
 
 ### Authentication + edit
 
 ```bash
-python -m mwcli --host host.docker.internal --scheme http --path /w/ \
+uvx mwclient-cli --host host.docker.internal --scheme http --path /w/ \
   --username "Admin" --password "secret" \
   page "Sandbox" edit \
   --arg "Edited from mwcli ~~~~" \
@@ -144,7 +148,7 @@ python -m mwcli --host host.docker.internal --scheme http --path /w/ \
 Local file upload:
 
 ```bash
-python -m mwcli --host host.docker.internal --scheme http --path /w/ \
+uvx mwclient-cli --host host.docker.internal --scheme http --path /w/ \
   --username "Admin" --password "secret" \
   site upload \
   --kw file="/tmp/example.png" \
@@ -155,7 +159,7 @@ python -m mwcli --host host.docker.internal --scheme http --path /w/ \
 Upload from URL:
 
 ```bash
-python -m mwcli --host host.docker.internal --scheme http --path /w/ \
+uvx mwclient-cli --host host.docker.internal --scheme http --path /w/ \
   --username "Admin" --password "secret" \
   site upload \
   --kw url="https://example.com/example.png" \
@@ -165,21 +169,21 @@ python -m mwcli --host host.docker.internal --scheme http --path /w/ \
 ### Semantic MediaWiki ask API
 
 ```bash
-python -m mwcli --host host.docker.internal --scheme http --path /w/ \
+uvx mwclient-cli --host host.docker.internal --scheme http --path /w/ \
   site ask --arg '[[Category:Item]]|?Has author|?Has status' --max-items 20
 ```
 
 With an explicit title context:
 
 ```bash
-python -m mwcli --host host.docker.internal --scheme http --path /w/ \
+uvx mwclient-cli --host host.docker.internal --scheme http --path /w/ \
   site ask --arg '[[Category:Item]]|?Has author' --kw title="Main Page" --max-items 20
 ```
 
 Fetch all SMW properties for a page (`smwbrowse`):
 
 ```bash
-python -m mwcli --indent 2 --host host.docker.internal --scheme http --path /w/ \
+uvx mwclient-cli --indent 2 --host host.docker.internal --scheme http --path /w/ \
   site raw_api --arg smwbrowse --arg GET --kw browse=subject \
   --kw params='"{\"subject\":\"Main Page\",\"ns\":0}"'
 ```
@@ -193,14 +197,14 @@ Use `get` / `post` / `api` / `raw_api` directly.
 Get siteinfo:
 
 ```bash
-python -m mwcli --host host.docker.internal --scheme http --path /w/ \
+uvx mwclient-cli --host host.docker.internal --scheme http --path /w/ \
   site get --arg query --kw meta=siteinfo --kw siprop='general|namespaces'
 ```
 
 Generic `api` call with GET method:
 
 ```bash
-python -m mwcli --host host.docker.internal --scheme http --path /w/ \
+uvx mwclient-cli --host host.docker.internal --scheme http --path /w/ \
   site api --arg query --arg GET --kw prop=info --kw titles="Main Page"
 ```
 
@@ -214,7 +218,7 @@ python -m mwcli --host host.docker.internal --scheme http --path /w/ \
 Parse wikitext/HTML directly as Markdown:
 
 ```bash
-python -m mwcli --host host.docker.internal --scheme http --path /w/ \
+uvx mwclient-cli --host host.docker.internal --scheme http --path /w/ \
   site parse --kw text=$'== Header ==\n\nBody' --markdown
 ```
 
@@ -230,14 +234,14 @@ Implementation uses `html2text`: https://pypi.org/project/html2text/
 Recent changes:
 
 ```bash
-python -m mwcli --host host.docker.internal --scheme http --path /w/ \
+uvx mwclient-cli --host host.docker.internal --scheme http --path /w/ \
   site recentchanges --kw prop='title|timestamp|user|comment' --max-items 5
 ```
 
 Image usage:
 
 ```bash
-python -m mwcli --host host.docker.internal --scheme http --path /w/ \
+uvx mwclient-cli --host host.docker.internal --scheme http --path /w/ \
   image "Example.png" imageusage --max-items 10
 ```
 
@@ -259,5 +263,5 @@ Then run shorter commands, for example:
 export MWCLI_HOST=host.docker.internal
 export MWCLI_SCHEME=http
 export MWCLI_PATH=/w/
-python -m mwcli site search --arg "space" --kw what=text --max-items 5
+uvx mwclient-cli site search --arg "space" --kw what=text --max-items 5
 ```
