@@ -1,4 +1,4 @@
-# mwcli
+# mwclient-cli
 
 CLI wrapper around `mwclient` library. Built for ✨Agentic workflows 🤖
 
