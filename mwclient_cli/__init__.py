@@ -1,4 +1,4 @@
-"""mwclient-cli package."""
+"""mwclient_cli package."""
 
 from .cli import run
 

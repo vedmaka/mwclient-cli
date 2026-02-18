@@ -149,8 +149,20 @@ wheels = [
 ]
 
 [[package]]
-name = "mwcli"
-version = "0.1.0"
+name = "mwclient"
+version = "0.11.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "requests-oauthlib" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/5e/b3/0f77b8838a22e99b9cb64aef15fb96a4a8315fe890dbe3bff6f8364e8940/mwclient-0.11.0.tar.gz", hash = "sha256:2bb7696f3703243eb33514ab162d7f6076dcedd011be90682936046c5e34fd06", size = 71978, upload-time = "2024-08-12T09:08:14.235Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/b0/ad/2bf4551a9f9c5c360b990ce6119edd717e0f28bb332a71921f4aa52889dc/mwclient-0.11.0-py3-none-any.whl", hash = "sha256:27914a307cb4539fd49a16d634c9c777c0de0976b3af9225bd95d4657bfd4d74", size = 33274, upload-time = "2024-08-12T09:08:13Z" },
+]
+
+[[package]]
+name = "mwclient-cli"
+version = "0.1.3"
 source = { editable = "." }
 dependencies = [
     { name = "html2text" },
@@ -169,18 +181,6 @@ requires-dist = [
     { name = "pytest", marker = "extra == 'test'", specifier = "==9.0.2" },
 ]
 provides-extras = ["test"]
-
-[[package]]
-name = "mwclient"
-version = "0.11.0"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "requests-oauthlib" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/5e/b3/0f77b8838a22e99b9cb64aef15fb96a4a8315fe890dbe3bff6f8364e8940/mwclient-0.11.0.tar.gz", hash = "sha256:2bb7696f3703243eb33514ab162d7f6076dcedd011be90682936046c5e34fd06", size = 71978, upload-time = "2024-08-12T09:08:14.235Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/b0/ad/2bf4551a9f9c5c360b990ce6119edd717e0f28bb332a71921f4aa52889dc/mwclient-0.11.0-py3-none-any.whl", hash = "sha256:27914a307cb4539fd49a16d634c9c777c0de0976b3af9225bd95d4657bfd4d74", size = 33274, upload-time = "2024-08-12T09:08:13Z" },
-]
 
 [[package]]
 name = "oauthlib"

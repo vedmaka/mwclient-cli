@@ -3,7 +3,7 @@ from unittest.mock import patch
 
 import pytest
 
-from mwcli import cli
+from mwclient_cli import cli
 
 
 class DummyPage:

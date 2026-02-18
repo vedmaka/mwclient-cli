@@ -12,8 +12,7 @@ Exposes `mwclient` methods from 3 targets:
 From project dir:
 
 ```bash
-pip install -r requirements.txt
-pip install -e .
+pip install mwclient-cli
 ```
 
 ## Command shape

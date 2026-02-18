@@ -1,4 +1,4 @@
-"""Command-line wrapper for mwclient."""
+"""Command-line wrapper for mwclient library"""
 
 from __future__ import annotations
 
@@ -364,7 +364,7 @@ def run(argv: list[str] | None = None) -> int:
     target = build_target(build_site(args), args)
     methods = list_public_methods(args.command)
     if args.method not in methods:
-        parser.error(f"unknown method {args.command}.{args.method}")
+        parser.error(f"Unknown method {args.command}.{args.method}")
     method = getattr(target, args.method)
 
     result = method(*positionals, **kwargs)
