@@ -12,7 +12,7 @@ Read the [SKILL.md](SKILL.md)
 uvx mwclient-cli --help
 ```
 
-## Install
+# Install
 
 ```bash
 pip install mwclient-cli
