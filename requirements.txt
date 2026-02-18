@@ -1,3 +1,4 @@
-mwclient
-pytest
-html2text
+mwclient==0.11.0
+pytest==9.0.2
+html2text==2025.4.15
+
