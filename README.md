@@ -1,10 +1,26 @@
 # mwcli
 
-CLI wrapper around `mwclient` library. Built for Agentic workflows 🤖
+CLI wrapper around `mwclient` library. Built for ✨Agentic workflows 🤖
 
 # Quickstart (for Agents 🤖)
 
 Read the [SKILL.md](SKILL.md)
+
+# Quickstart (for Humans with AI helpers 🧑🤖)
+
+Just tell your agent to use `mwclient-cli` like that:
+
+```
+Use mwclient-cli (https://raw.githubusercontent.com/vedmaka/mwclient-cli/refs/heads/master/SKILL.md) to get the 
+content of the page "New Year" page from Wikipedia and output a summary as markdown
+```
+
+Or
+
+```
+Use mwclient-cli (https://raw.githubusercontent.com/vedmaka/mwclient-cli/refs/heads/master/SKILL.md) to modify
+pages of https://mywiki.com creating 10 new pages in "How to cook a sandwich" category
+```
 
 # Quickstart (for Humans 🧑)
 
