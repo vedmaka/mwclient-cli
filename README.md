@@ -33,6 +33,13 @@ uvx mwclient-cli --help
 # Install
 
 ```bash
+# MacOS HomeBrew
+brew tap brew tap vedmaka/homebrew-mwclient-cli 
+brew install vedmaka/homebrew-mwclient-cli/mwclient-cli
+```
+
+```bash
+# pip
 pip install mwclient-cli
 ```
 
