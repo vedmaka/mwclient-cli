@@ -240,7 +240,7 @@ uvx mwclient-cli --host host.docker.internal --scheme http --path /w/ \
 Raw API (no extra wrapper logic):
 
 ```bash
-python -m mwcli --host host.docker.internal --scheme http --path /w/ \
+uvx mwclient-cli --host host.docker.internal --scheme http --path /w/ \
   site raw_api --arg query --arg GET --kw list=search --kw srsearch=space
 ```
 
