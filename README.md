@@ -294,3 +294,13 @@ export MWCLI_SCHEME=http
 export MWCLI_PATH=/w/
 uvx mwclient-cli site search --arg "space" --kw what=text --max-items 5
 ```
+
+## Star History
+
+<a href="https://www.star-history.com/?repos=vedmaka%2Fmwclient-cli&type=date&legend=top-left">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/image?repos=vedmaka/mwclient-cli&type=date&theme=dark&legend=top-left" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/image?repos=vedmaka/mwclient-cli&type=date&legend=top-left" />
+   <img alt="Star History Chart" src="https://api.star-history.com/image?repos=vedmaka/mwclient-cli&type=date&legend=top-left" />
+ </picture>
+</a>
