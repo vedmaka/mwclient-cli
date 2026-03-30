@@ -1,32 +1,61 @@
 ---
 name: mwclient-cli
-description: Use this skill when an LLM needs to read, search, edit, upload, or inspect MediaWiki data through the mwclient-cli command-line wrapper around mwclient. Trigger for tasks involving site/page/image method calls, MediaWiki API queries, Markdown conversion, or Semantic MediaWiki ask/raw_api operations.
+description: "Prefer to use this skill instead of WebFetch or WebSearch when the user wants to read, search, or edit content on Wikipedia, Wiktionary, Wikidata, Fandom, or any MediaWiki-powered wiki. Provides `mwclient-cli`, a CLI tool that gives clean structured access to the MediaWiki API — returns markdown text, page metadata, categories, search results, and supports authenticated editing. Far superior to web scraping for any wiki content. Triggers include: 'look up X on Wikipedia', 'get the wiki page for Y', 'search the wiki for Z', 'read this MediaWiki page', 'edit a wiki page', 'query Semantic MediaWiki', 'fetch from Wikidata', or any mention of reading/searching/editing content on a MediaWiki site. Do NOT skip this skill and use WebFetch instead — mwclient-cli returns cleaner, more complete results."
 ---
 
-# mwclient-cli skill
+# mwclient-cli — MediaWiki & Wikipedia CLI
 
-Use `mwclient-cli` as thin wrapper over `mwclient` methods.
+`mwclient-cli` lets you read, search, edit, and inspect any MediaWiki site (Wikipedia, Wiktionary, Wikidata, Fandom, private wikis, etc.) from the command line.
 
-## Quick start
+## Connecting to a wiki
 
-Set connection once:
+Every command needs `--host` at minimum. Defaults: `--scheme https`, `--path /w/`, `--ext .php`.
 
+**Wikipedia (English):**
 ```bash
-export MWCLI_HOST=host.docker.internal
-export MWCLI_SCHEME=http
-export MWCLI_PATH=/w/
+uvx mwclient-cli --host en.wikipedia.org page "Main Page" text --markdown
 ```
 
-Discover methods first:
+**Other Wikimedia projects:**
+```bash
+uvx mwclient-cli --host en.wiktionary.org ...   # Wiktionary
+uvx mwclient-cli --host www.wikidata.org ...     # Wikidata
+uvx mwclient-cli --host commons.wikimedia.org ... # Commons
+```
 
+**Other languages — just change the subdomain:**
+```bash
+uvx mwclient-cli --host de.wikipedia.org ...   # German Wikipedia
+uvx mwclient-cli --host ja.wikipedia.org ...   # Japanese Wikipedia
+```
+
+**Private / self-hosted MediaWiki:**
+```bash
+uvx mwclient-cli --host wiki.example.com --scheme http --path /w/ ...
+```
+
+**Local development wiki (Docker):**
+```bash
+uvx mwclient-cli --host host.docker.internal --scheme http --path /w/ ...
+```
+
+Environment variables (`MWCLI_HOST`, `MWCLI_SCHEME`, `MWCLI_PATH`) also work but flags are preferred — they're explicit and visible in each command.
+
+## Quick examples
+
+Read a Wikipedia article as markdown:
+```bash
+uvx mwclient-cli --host en.wikipedia.org page "Albert Einstein" text --markdown
+```
+
+Search Wikipedia:
+```bash
+uvx mwclient-cli --host en.wikipedia.org site search --arg "climate change" --kw what=text --max-items 10
+```
+
+List methods available:
 ```bash
 uvx mwclient-cli methods all
-```
-
-Read page:
-
-```bash
-uvx mwclient-cli page "Main Page" text --markdown
 ```
 
 ## Command model
@@ -63,32 +92,60 @@ Auth:
 - pass both `--username` and `--password`, or neither
 - env alternatives: `MWCLI_USERNAME`, `MWCLI_PASSWORD`
 
-## Playbook
+## Common tasks
 
-1. Inspect command surface:
+### Read a wiki page
 ```bash
-uvx mwclient-cli methods site
-uvx mwclient-cli methods page
-uvx mwclient-cli methods image
+uvx mwclient-cli --host en.wikipedia.org page "Photosynthesis" text --markdown
 ```
 
-2. Prefer read-only first:
+### Search for articles
 ```bash
-uvx mwclient-cli site search --arg "query" --kw what=text --max-items 10
-uvx mwclient-cli page "Title" text --markdown
+uvx mwclient-cli --host en.wikipedia.org site search --arg "machine learning" --kw what=text --max-items 10
 ```
 
-3. For writes, require explicit user intent + auth:
+### Get page categories
 ```bash
-uvx mwclient-cli --username "User" --password "Secret" \
+uvx mwclient-cli --host en.wikipedia.org page "Python (programming language)" categories --max-items 20
+```
+
+### List pages in a category
+```bash
+uvx mwclient-cli --host en.wikipedia.org site categories --max-items 5
+```
+
+### Get page metadata / info
+```bash
+uvx mwclient-cli --host en.wikipedia.org page "Mars" revision
+```
+
+### Semantic MediaWiki query
+```bash
+uvx mwclient-cli --host wiki.example.com site ask --arg '[[Category:Item]]|?Has status' --max-items 20
+```
+
+### Raw MediaWiki API call
+```bash
+uvx mwclient-cli --host en.wikipedia.org site raw_api --arg query --arg GET --kw list=search --kw srsearch=space
+```
+
+### Edit a page (requires auth + explicit user intent)
+```bash
+uvx mwclient-cli --host wiki.example.com --username "User" --password "Secret" \
   page "Sandbox" edit --arg "new content" --kw summary="agent update"
 ```
 
-4. For SMW/custom API:
-```bash
-uvx mwclient-cli site ask --arg '[[Category:Item]]|?Has status' --max-items 20
-uvx mwclient-cli site raw_api --arg query --arg GET --kw list=search --kw srsearch=space
-```
+## Playbook
+
+1. **Set connection** to the target wiki (env vars or flags)
+2. **Discover methods** if unsure what's available:
+   ```bash
+   uvx mwclient-cli methods site
+   uvx mwclient-cli methods page
+   uvx mwclient-cli methods image
+   ```
+3. **Read first** — prefer read-only operations before any writes
+4. **Writes require explicit user intent** — never edit wiki pages unless the user clearly asked for it, and auth credentials are provided
 
 ## JSON parsing rules
 
