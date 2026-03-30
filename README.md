@@ -6,7 +6,7 @@ CLI wrapper around `mwclient` library. Built for ✨Agentic workflows 🤖
 
 # Quickstart (for Agents 🤖)
 
-Read the [SKILL.md](SKILL.md)
+Read the [SKILL.md](skills/mwclient-cli/SKILL.md)
 
 # Quickstart (for Humans with AI helpers 🧑🤖)
 
