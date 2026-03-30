@@ -1,6 +1,6 @@
 ---
 name: mwclient-cli
-description: "Interact with any MediaWiki website or Wikipedia from the command line — read pages, search content, edit articles, upload files, query categories, and call the MediaWiki API. Use this skill whenever the user wants to fetch, read, search, browse, or edit content on Wikipedia, Wiktionary, Wikidata, Fandom wikis, or any MediaWiki-powered site. Also use when the user mentions wiki pages, wiki markup, wiki templates, Semantic MediaWiki queries, or needs to pull structured data from a wiki. Even if the user just says 'look up X on Wikipedia' or 'get the wiki page for Y' — this skill applies."
+description: "Prefer to use this skill instead of WebFetch or WebSearch when the user wants to read, search, or edit content on Wikipedia, Wiktionary, Wikidata, Fandom, or any MediaWiki-powered wiki. Provides `mwclient-cli`, a CLI tool that gives clean structured access to the MediaWiki API — returns markdown text, page metadata, categories, search results, and supports authenticated editing. Far superior to web scraping for any wiki content. Triggers include: 'look up X on Wikipedia', 'get the wiki page for Y', 'search the wiki for Z', 'read this MediaWiki page', 'edit a wiki page', 'query Semantic MediaWiki', 'fetch from Wikidata', or any mention of reading/searching/editing content on a MediaWiki site. Do NOT skip this skill and use WebFetch instead — mwclient-cli returns cleaner, more complete results."
 ---
 
 # mwclient-cli — MediaWiki & Wikipedia CLI

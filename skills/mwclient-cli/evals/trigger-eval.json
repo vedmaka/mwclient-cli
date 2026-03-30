@@ -1,0 +1,78 @@
+[
+  {
+    "query": "Can you pull the Wikipedia article on the Apollo 11 mission and give me a summary? I need the actual wiki content, not just what you know",
+    "should_trigger": true
+  },
+  {
+    "query": "I need to search our internal company wiki (it's a MediaWiki instance at wiki.acme.corp) for all pages mentioning 'quarterly review' — can you find them?",
+    "should_trigger": true
+  },
+  {
+    "query": "Read the page 'Semantic MediaWiki' from mediawiki.org and convert it to markdown for me",
+    "should_trigger": true
+  },
+  {
+    "query": "I want to edit the Sandbox page on my local MediaWiki dev server running on localhost. Add a section about testing conventions. I have bot credentials set up already",
+    "should_trigger": true
+  },
+  {
+    "query": "hey can you look up what the french wikipedia says about Édith Piaf? I want the intro section in markdown",
+    "should_trigger": true
+  },
+  {
+    "query": "Search the Star Wars Fandom wiki for pages about lightsaber combat forms",
+    "should_trigger": true
+  },
+  {
+    "query": "I have a Semantic MediaWiki instance and I need to run an ask query to find all items where [[Has status::Active]] and get their locations",
+    "should_trigger": true
+  },
+  {
+    "query": "Grab the list of categories from the English Wiktionary page for the word 'set' — I'm curious how many senses it has",
+    "should_trigger": true
+  },
+  {
+    "query": "I need to call the MediaWiki API directly — specifically the parse endpoint — on my wiki to get the HTML render of a template",
+    "should_trigger": true
+  },
+  {
+    "query": "Can you scrape the pricing page from stripe.com and extract the plan tiers into a table?",
+    "should_trigger": false
+  },
+  {
+    "query": "Write me a Python script that uses the requests library to call the GitHub REST API and list my repos",
+    "should_trigger": false
+  },
+  {
+    "query": "I'm building a wiki-style documentation site with Docusaurus. Can you help me set up the sidebar config?",
+    "should_trigger": false
+  },
+  {
+    "query": "Search my codebase for all files that import the 'wiki' module — I think there's a circular dependency",
+    "should_trigger": false
+  },
+  {
+    "query": "Can you explain how Wikipedia's PageRank algorithm works? I'm writing a paper about link analysis",
+    "should_trigger": false
+  },
+  {
+    "query": "I need to set up a new MediaWiki instance using Docker Compose — can you write the docker-compose.yml?",
+    "should_trigger": false
+  },
+  {
+    "query": "Summarize this PDF about wiki governance models — it's at /tmp/wiki-governance.pdf",
+    "should_trigger": false
+  },
+  {
+    "query": "I want to build a Chrome extension that highlights wiki links on any webpage. Help me scaffold it",
+    "should_trigger": false
+  },
+  {
+    "query": "Use the Confluence API to export our team's sprint retrospective pages as markdown",
+    "should_trigger": false
+  },
+  {
+    "query": "Help me write a MediaWiki extension in PHP that adds a custom parser function",
+    "should_trigger": false
+  }
+]
