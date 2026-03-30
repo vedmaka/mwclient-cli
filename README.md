@@ -32,15 +32,23 @@ uvx mwclient-cli --help
 
 # Install
 
+## Install the CLI tool
+
 ```bash
 # MacOS HomeBrew
-brew tap brew tap vedmaka/homebrew-mwclient-cli 
+brew tap vedmaka/homebrew-mwclient-cli 
 brew install vedmaka/homebrew-mwclient-cli/mwclient-cli
 ```
 
 ```bash
 # pip
 pip install mwclient-cli
+```
+
+## Install the skill for your agent
+
+```bash
+npx skills add -g vedmaka/mwclient-cli
 ```
 
 ## Command shape
