@@ -13,6 +13,26 @@ from collections.abc import Iterator, Mapping
 from typing import Any
 
 import html2text
+import mwclient.errors as mwclient_errors
+
+try:
+    import requests.exceptions as requests_exceptions
+except ImportError:
+    requests_exceptions = None  # type: ignore[assignment]
+
+
+def _handle_runtime_error(e: Exception) -> int:
+    """Print a graceful CLI message for mwclient/requests errors; return exit code 1."""
+    if isinstance(e, mwclient_errors.MwClientError):
+        print(str(e), file=sys.stderr)
+        return 1
+    if requests_exceptions is not None and isinstance(
+        e, requests_exceptions.RequestException
+    ):
+        print(str(e), file=sys.stderr)
+        return 1
+    print(f"Error: {e}", file=sys.stderr)
+    return 1
 
 _ENTITY_LOCATIONS = {
     "site": ("mwclient.client", "Site"),
@@ -361,22 +381,32 @@ def run(argv: list[str] | None = None) -> int:
     except ValueError as exc:
         parser.error(str(exc))
 
-    target = build_target(build_site(args), args)
+    try:
+        target = build_target(build_site(args), args)
+    except Exception as e:
+        return _handle_runtime_error(e)
+
     methods = list_public_methods(args.command)
     if args.method not in methods:
         parser.error(f"Unknown method {args.command}.{args.method}")
     method = getattr(target, args.method)
 
-    result = method(*positionals, **kwargs)
-    result = maybe_convert_markdown(args, target, result)
+    try:
+        result = method(*positionals, **kwargs)
+        result = maybe_convert_markdown(args, target, result)
+    except Exception as e:
+        return _handle_runtime_error(e)
     if isinstance(result, Iterator):
         max_items = args.max_items
         count = 0
-        for item in result:
-            print_json(item, args.indent)
-            count += 1
-            if max_items is not None and count >= max_items:
-                break
+        try:
+            for item in result:
+                print_json(item, args.indent)
+                count += 1
+                if max_items is not None and count >= max_items:
+                    break
+        except Exception as e:
+            return _handle_runtime_error(e)
         return 0
 
     if args.stream and isinstance(result, (list, tuple)):

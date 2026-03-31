@@ -3,6 +3,8 @@ from unittest.mock import patch
 
 import pytest
 
+import mwclient.errors as mwclient_errors
+
 from mwclient_cli import cli
 
 
@@ -56,6 +58,47 @@ def test_parse_keyword_args():
 def test_parse_keyword_args_rejects_invalid():
     with pytest.raises(ValueError):
         cli.parse_keyword_args(["broken"])
+
+
+def test_mwclient_error_prints_gracefully_and_returns_1(capsys):
+    """Uncaught mwclient/requests errors become a clean stderr message and exit 1."""
+    with patch.object(cli, "build_site", side_effect=mwclient_errors.APIError("badparam", "Invalid parameter 'x'", None)):
+        rc = cli.run(["--host", "example.org", "site", "ping"])
+    assert rc == 1
+    err = capsys.readouterr().err
+    assert "Invalid parameter" in err or "badparam" in err
+
+
+def test_requests_connection_error_prints_gracefully(capsys):
+    """requests.exceptions (e.g. ConnectionError) get a clean stderr message and exit 1."""
+    import requests.exceptions
+
+    with patch.object(
+        cli, "build_site", side_effect=requests.exceptions.ConnectionError("Connection refused")
+    ):
+        rc = cli.run(["--host", "example.org", "site", "ping"])
+    assert rc == 1
+    assert "Connection refused" in capsys.readouterr().err
+
+
+def test_iterator_error_mid_stream(capsys):
+    """Generator that raises mid-iteration is caught and reported gracefully."""
+
+    def failing_generator(self):
+        yield {"n": 0}
+        raise mwclient_errors.APIError("internal", "Server error", None)
+
+    DummyPage.failing = failing_generator
+    try:
+        with patch.object(cli, "build_site", return_value=DummySite()), patch.object(
+            cli, "list_public_methods", return_value={"failing": failing_generator}
+        ):
+            rc = cli.run(["--host", "example.org", "page", "Test", "failing"])
+        assert rc == 1
+        err = capsys.readouterr().err
+        assert "Server error" in err or "internal" in err
+    finally:
+        del DummyPage.failing
 
 
 def test_site_method_call_prints_json(capsys):
